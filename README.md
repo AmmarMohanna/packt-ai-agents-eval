@@ -85,8 +85,6 @@ Use the Colab links above and run each notebook from top to bottom. No local Pyt
 
 **You will learn:** How a correct final answer can hide wrong tool choices or malformed arguments that compound into larger failures.
 
-**Estimated runtime:** ~2 minutes
-
 ---
 
 ### Notebook 2 — Trajectory Evaluation (`02_trajectory_evaluation.ipynb`)
@@ -96,8 +94,6 @@ Use the Colab links above and run each notebook from top to bottom. No local Pyt
 **Key metrics:** Step count, latency, token cost, duplicate detection, loop detection, recovery assertion.
 
 **You will learn:** How two agents with the same answer can differ dramatically in reliability and efficiency — and how to catch the difference with assertions.
-
-**Estimated runtime:** ~2 minutes
 
 ---
 
@@ -109,8 +105,6 @@ Use the Colab links above and run each notebook from top to bottom. No local Pyt
 
 **You will learn:** How to measure whether an LLM judge is reliable enough to trust for automated regression, and which rubric dimensions are hardest to automate.
 
-**Estimated runtime:** ~2 minutes
-
 ---
 
 ### Notebook 4 — Adversarial Evaluation and Production Readiness (`04_adversarial_evaluation.ipynb`)
@@ -120,8 +114,6 @@ Use the Colab links above and run each notebook from top to bottom. No local Pyt
 **Key metrics:** Attack success rate, resistance rate, severity-weighted failures, breakdown by attack type.
 
 **You will learn:** Why guardrails must be measured empirically and how to build an adversarial regression suite.
-
-**Estimated runtime:** ~2 minutes
 
 ---
 
