@@ -129,7 +129,7 @@ def mock_llm_judge(example: Dict) -> Dict[str, Any]:
     }
 
 
-def real_llm_judge(example: Dict, api_key: str, model: str = "gpt-4o-mini") -> Dict:
+def real_llm_judge(example: Dict, api_key: str, model: str = "gpt-4.1-nano") -> Dict:
     """
     Score one outcome example with the OpenAI API.
 

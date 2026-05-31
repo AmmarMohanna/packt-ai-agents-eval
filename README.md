@@ -138,7 +138,7 @@ All four notebooks run without API keys by default. The mock agent uses:
 
 ## Optional: Using OpenAI in the Notebooks
 
-Each notebook includes a Colab checkbox named `USE_OPENAI` in the first setup cell. Leave it unchecked for the free deterministic course path, or check it to make real OpenAI API calls for that notebook's agent behavior.
+Each notebook includes a Colab checkbox named `USE_OPENAI` in the first setup cell. Leave it unchecked for the free deterministic course path, or check it to make real OpenAI API calls for that notebook's agent behavior. The default OpenAI model is `gpt-4.1-nano`, chosen as a small baseline model so evaluation failures remain visible during the demo.
 
 1. In Colab, open the **Secrets** panel and add a secret named `OPENAI_API_KEY`.
 2. In the first setup cell, check:
