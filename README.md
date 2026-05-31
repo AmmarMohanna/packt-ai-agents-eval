@@ -20,7 +20,7 @@ No API keys required.
 
 ## Open in Google Colab
 
-Click any badge below to launch the notebook directly in your browser — no install required:
+Click any badge below to launch the notebook directly in your browser. This is the recommended way to run the course material.
 
 | Notebook | Open in Colab |
 |----------|---------------|
@@ -28,6 +28,8 @@ Click any badge below to launch the notebook directly in your browser — no ins
 | 02 — Trajectory Evaluation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AmmarMohanna/packt-ai-agents-eval/blob/main/notebooks/02_trajectory_evaluation.ipynb) |
 | 03 — Outcome Evaluation & LLM-as-Judge | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AmmarMohanna/packt-ai-agents-eval/blob/main/notebooks/03_outcome_evaluation_llm_judge.ipynb) |
 | 04 — Adversarial Evaluation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AmmarMohanna/packt-ai-agents-eval/blob/main/notebooks/04_adversarial_evaluation.ipynb) |
+
+In Colab, choose **Runtime > Run all**. Each notebook installs its Python dependencies, clones this repo into the Colab runtime, and sets up the correct paths automatically.
 
 ---
 
@@ -68,39 +70,9 @@ Click any badge below to launch the notebook directly in your browser — no ins
 
 ---
 
-## Setup Instructions
+## Running the Notebooks
 
-### Prerequisites
-
-- Python 3.8 or higher
-- pip
-
-### Installation
-
-```bash
-# 1. Clone or download the repository
-git clone https://github.com/AmmarMohanna/packt-ai-agents-eval.git
-cd packt-ai-agents-eval
-
-# 2. Create a virtual environment
-python -m venv .venv
-
-# 3. Activate the environment
-# macOS / Linux:
-source .venv/bin/activate
-# Windows (Command Prompt):
-.venv\Scripts\activate.bat
-# Windows (PowerShell):
-.venv\Scripts\Activate.ps1
-
-# 4. Install dependencies
-pip install -r requirements.txt
-
-# 5. Launch JupyterLab
-jupyter lab
-```
-
-Open the `notebooks/` folder in JupyterLab and run each notebook from top to bottom.
+Use the Colab links above and run each notebook from top to bottom. No local Python setup, terminal commands, or API keys are required for the default course exercises.
 
 ---
 
@@ -183,18 +155,17 @@ To replace the mock judge with a real LLM call:
 
 **`ModuleNotFoundError: No module named 'src'`**
 - Run the setup/import cell near the top of the notebook.
-- The setup cell detects whether it is running in Colab, the repo root, or the `notebooks/` folder and adds the repo root to `sys.path`.
+- In Colab, this cell clones the public GitHub repo and adds the repo root to `sys.path`.
 
 **`FileNotFoundError` on a data file**
 - Run the setup/import cell near the top of the notebook first.
 - It changes the notebook working directory to `notebooks/`, so data paths resolve through `../data/`.
 
 **Kernel not found**
-- Run `python -m ipykernel install --user --name=.venv` in your activated virtual environment.
+- In Colab, choose **Runtime > Change runtime type** and use a Python 3 runtime.
 
 **Charts not displaying**
-- Ensure `matplotlib` is installed: `pip install matplotlib`.
-- In some environments, add `%matplotlib inline` at the top of the setup cell.
+- In Colab, choose **Runtime > Restart session**, then run the notebook again from the first cell.
 
 ---
 
