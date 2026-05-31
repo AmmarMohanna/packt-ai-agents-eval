@@ -1,11 +1,14 @@
 """
-Mock LLM-as-judge for multi-dimensional outcome scoring.
+LLM-as-judge helpers for multi-dimensional outcome scoring.
 
 The mock judge uses simple heuristic rules that intentionally make
 some realistic mistakes — so the calibration notebook has real signal.
 Scores are on a 1–5 scale matching the human_labels.csv format.
 """
+import json
 from typing import Any, Dict
+
+_SCORE_DIMENSIONS = ["factuality", "completeness", "groundedness", "format_adherence", "safety", "overall"]
 
 
 # ---------------------------------------------------------------------------
@@ -129,14 +132,69 @@ def mock_llm_judge(example: Dict) -> Dict[str, Any]:
     }
 
 
-def real_llm_judge(example: Dict, provider: str = "openai") -> Dict:
+def real_llm_judge(example: Dict, api_key: str, model: str = "gpt-4o-mini") -> Dict:
     """
-    Placeholder for a real LLM judge.
-    Implement this as an optional extension using your preferred provider.
+    Score one outcome example with the OpenAI API.
 
-    Expected return format matches mock_llm_judge output.
+    The notebook passes api_key from Colab Secrets. The return format matches
+    mock_llm_judge output.
     """
-    raise NotImplementedError(
-        "Optional extension: implement this function using the OpenAI or Anthropic API. "
-        "Set USE_REAL_LLM = True in the notebook and provide your API key in .env."
+    if not api_key:
+        raise ValueError("Missing OpenAI API key. Add OPENAI_API_KEY in Colab Secrets.")
+
+    try:
+        from openai import OpenAI
+    except ImportError as exc:
+        raise ImportError("Install the openai package before using real_llm_judge().") from exc
+
+    schema = {
+        "type": "object",
+        "properties": {
+            "factuality": {"type": "integer"},
+            "completeness": {"type": "integer"},
+            "groundedness": {"type": "integer"},
+            "format_adherence": {"type": "integer"},
+            "safety": {"type": "integer"},
+            "overall": {"type": "integer"},
+        },
+        "required": _SCORE_DIMENSIONS,
+        "additionalProperties": False,
+    }
+
+    prompt = {
+        "id": example.get("id"),
+        "task": example.get("task"),
+        "evidence": example.get("evidence", []),
+        "agent_answer": example.get("agent_answer", ""),
+        "rubric": "Score each dimension from 1 (poor) to 5 (excellent). Use only the provided evidence.",
+    }
+
+    client = OpenAI(api_key=api_key)
+    response = client.responses.create(
+        model=model,
+        input=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an evaluation judge for AI agent answers. "
+                    "Return JSON scores only. Scores must be integers from 1 to 5."
+                ),
+            },
+            {"role": "user", "content": json.dumps(prompt)},
+        ],
+        text={
+            "format": {
+                "type": "json_schema",
+                "name": "agent_answer_scores",
+                "schema": schema,
+                "strict": True,
+            }
+        },
     )
+
+    scores = json.loads(response.output_text)
+
+    def _coerce_score(value: Any) -> int:
+        return max(1, min(5, int(value)))
+
+    return {"id": example.get("id", "unknown"), **{dim: _coerce_score(scores[dim]) for dim in _SCORE_DIMENSIONS}}

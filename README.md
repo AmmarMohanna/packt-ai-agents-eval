@@ -5,16 +5,15 @@
 A hands-on 4-hour course that teaches you how to evaluate AI agents at four progressive layers:
 component decisions, execution trajectories, output quality, and adversarial robustness.
 
-All notebooks run **completely offline** using a deterministic mock research assistant agent.
-No API keys required.
+By default, the notebooks run in **Google Colab** using a deterministic mock research assistant agent.
+No API keys are required for the core course exercises.
 
 ---
 
 ## Course Links
 
 - [Course announcement page](https://www.eventbrite.com/e/evaluating-ai-agents-bootcamp-tickets-1990306501323?aff=oddtdtcreator&keep_tld=true)
-- [Course slides PDF](https://github.com/AmmarMohanna/packt-ai-agents-eval/blob/main/slides/AI_Agents_Eval.pdf)
-- [Direct slides download](https://raw.githubusercontent.com/AmmarMohanna/packt-ai-agents-eval/main/slides/AI_Agents_Eval.pdf)
+- [Download Course Slides](https://raw.githubusercontent.com/AmmarMohanna/packt-ai-agents-eval/main/slides/AI_Agents_Eval.pdf)
 
 ---
 
@@ -39,7 +38,6 @@ In Colab, choose **Runtime > Run all**. Each notebook installs its Python depend
 .
 ├── README.md
 ├── requirements.txt
-├── .env.example
 ├── notebooks/
 │   ├── 01_component_evaluation.ipynb
 │   ├── 02_trajectory_evaluation.ipynb
@@ -126,9 +124,9 @@ Use the Colab links above and run each notebook from top to bottom. No local Pyt
 
 ---
 
-## Running Offline (Default)
+## Default Mock Mode
 
-All four notebooks run without internet access or API keys. The mock agent uses:
+All four notebooks run without API keys by default. The mock agent uses:
 
 - **Deterministic routing rules** in `src/mock_agent.py` — no randomness.
 - **Pre-built synthetic datasets** in `data/` — realistic but small.
@@ -141,76 +139,12 @@ All four notebooks run without internet access or API keys. The mock agent uses:
 
 To replace the mock judge with a real LLM call:
 
-1. Copy `.env.example` to `.env` and add your API key.
-2. In `notebooks/03_outcome_evaluation_llm_judge.ipynb`, change:
+1. In Colab, open the **Secrets** panel and add a secret named `OPENAI_API_KEY`.
+2. In Notebook 3, change:
    ```python
    USE_REAL_LLM = False   # change to True
    ```
-3. Implement `real_llm_judge()` in `src/judge.py` using your preferred provider.
-   The function signature and return format are documented in the file.
-
----
-
-## Troubleshooting
-
-**`ModuleNotFoundError: No module named 'src'`**
-- Run the setup/import cell near the top of the notebook.
-- In Colab, this cell clones the public GitHub repo and adds the repo root to `sys.path`.
-
-**`FileNotFoundError` on a data file**
-- Run the setup/import cell near the top of the notebook first.
-- It changes the notebook working directory to `notebooks/`, so data paths resolve through `../data/`.
-
-**Kernel not found**
-- In Colab, choose **Runtime > Change runtime type** and use a Python 3 runtime.
-
-**Charts not displaying**
-- In Colab, choose **Runtime > Restart session**, then run the notebook again from the first cell.
-
----
-
-## 15-Minute Facilitation Plan
-
-### Notebook 1 — Component Evaluation
-| Time | Activity |
-|------|----------|
-| 0:00 | Instructor introduces component evaluation concept (2 min) |
-| 2:00 | Participants run cells 1–3: load data and run predictions |
-| 6:00 | Cells 4–5: compute accuracy and argument metrics |
-| 10:00 | Cells 6–7: confusion matrix and failure table |
-| 13:00 | Group debrief: which failure mode is most dangerous? |
-| 14:00 | "Try it yourself" — add clarification example |
-
-### Notebook 2 — Trajectory Evaluation
-| Time | Activity |
-|------|----------|
-| 0:00 | Instructor explains why path matters beyond outcome (2 min) |
-| 2:00 | Participants inspect clean vs. loop traces (cells 2–3) |
-| 6:00 | Run assertions over all traces, view pass/fail table (cells 4–6) |
-| 10:00 | Cells 7–8: aggregate failures and inspect a failed trace |
-| 13:00 | Group debrief: hard failure vs. warning decision |
-| 14:00 | "Try it yourself" — change max_steps threshold |
-
-### Notebook 3 — Outcome Evaluation / Judge Calibration
-| Time | Activity |
-|------|----------|
-| 0:00 | Instructor explains rubric dimensions (2 min) |
-| 2:00 | Load data and run mock judge (cells 1–4) |
-| 6:00 | Merge and compute calibration metrics (cells 5–6) |
-| 10:00 | Visualise heatmap and inspect worst disagreements (cells 7–8) |
-| 13:00 | Group debrief: which dimension would you trust in production? |
-| 14:00 | "Try it yourself" — modify one judge rule |
-
-### Notebook 4 — Adversarial Evaluation
-| Time | Activity |
-|------|----------|
-| 0:00 | Instructor introduces prompt injection concept (2 min) |
-| 2:00 | Load dataset, inspect a sample attack (cells 1–3) |
-| 5:00 | Run unguarded agent, measure attack success rate (cells 4–5) |
-| 8:00 | Run guarded agent, compare resistance rates (cells 6–7) |
-| 11:00 | Failure breakdown chart (cell 8) |
-| 13:00 | Group debrief: what does guarded ASR > 0 mean for shipping? |
-| 14:00 | "Try it yourself" — add a new adversarial payload |
+3. Run the notebook from the first cell. The notebook reads the key directly from Colab Secrets.
 
 ---
 
