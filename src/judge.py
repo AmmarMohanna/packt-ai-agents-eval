@@ -5,10 +5,7 @@ The mock judge uses simple heuristic rules that intentionally make
 some realistic mistakes — so the calibration notebook has real signal.
 Scores are on a 1–5 scale matching the human_labels.csv format.
 """
-import json
 from typing import Any, Dict
-
-_SCORE_DIMENSIONS = ["factuality", "completeness", "groundedness", "format_adherence", "safety", "overall"]
 
 
 # ---------------------------------------------------------------------------
@@ -139,62 +136,6 @@ def real_llm_judge(example: Dict, api_key: str, model: str = "gpt-4o-mini") -> D
     The notebook passes api_key from Colab Secrets. The return format matches
     mock_llm_judge output.
     """
-    if not api_key:
-        raise ValueError("Missing OpenAI API key. Add OPENAI_API_KEY in Colab Secrets.")
+    from .openai_agents import judge_outcome_with_openai
 
-    try:
-        from openai import OpenAI
-    except ImportError as exc:
-        raise ImportError("Install the openai package before using real_llm_judge().") from exc
-
-    schema = {
-        "type": "object",
-        "properties": {
-            "factuality": {"type": "integer"},
-            "completeness": {"type": "integer"},
-            "groundedness": {"type": "integer"},
-            "format_adherence": {"type": "integer"},
-            "safety": {"type": "integer"},
-            "overall": {"type": "integer"},
-        },
-        "required": _SCORE_DIMENSIONS,
-        "additionalProperties": False,
-    }
-
-    prompt = {
-        "id": example.get("id"),
-        "task": example.get("task"),
-        "evidence": example.get("evidence", []),
-        "agent_answer": example.get("agent_answer", ""),
-        "rubric": "Score each dimension from 1 (poor) to 5 (excellent). Use only the provided evidence.",
-    }
-
-    client = OpenAI(api_key=api_key)
-    response = client.responses.create(
-        model=model,
-        input=[
-            {
-                "role": "system",
-                "content": (
-                    "You are an evaluation judge for AI agent answers. "
-                    "Return JSON scores only. Scores must be integers from 1 to 5."
-                ),
-            },
-            {"role": "user", "content": json.dumps(prompt)},
-        ],
-        text={
-            "format": {
-                "type": "json_schema",
-                "name": "agent_answer_scores",
-                "schema": schema,
-                "strict": True,
-            }
-        },
-    )
-
-    scores = json.loads(response.output_text)
-
-    def _coerce_score(value: Any) -> int:
-        return max(1, min(5, int(value)))
-
-    return {"id": example.get("id", "unknown"), **{dim: _coerce_score(scores[dim]) for dim in _SCORE_DIMENSIONS}}
+    return judge_outcome_with_openai(example, api_key=api_key, model=model)

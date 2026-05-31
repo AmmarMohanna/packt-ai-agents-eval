@@ -49,6 +49,7 @@ In Colab, choose **Runtime > Run all**. Each notebook installs its Python depend
 │   ├── schemas.py
 │   ├── metrics.py
 │   ├── judge.py
+│   ├── openai_agents.py
 │   ├── trace_utils.py
 │   └── adversarial.py
 ├── data/
@@ -135,16 +136,18 @@ All four notebooks run without API keys by default. The mock agent uses:
 
 ---
 
-## Optional: Using a Real LLM (Notebook 3)
+## Optional: Using OpenAI in the Notebooks
 
-To replace the mock judge with a real LLM call:
+Each notebook includes a Colab checkbox named `USE_OPENAI` in the first setup cell. Leave it unchecked for the free deterministic course path, or check it to make real OpenAI API calls for that notebook's agent behavior.
 
 1. In Colab, open the **Secrets** panel and add a secret named `OPENAI_API_KEY`.
-2. In Notebook 3, change:
+2. In the first setup cell, check:
    ```python
-   USE_REAL_LLM = False   # change to True
+   USE_OPENAI = True
    ```
-3. Run the notebook from the first cell. The notebook reads the key directly from Colab Secrets.
+3. Optionally change `OPENAI_MODEL`, then run the notebook from the first cell.
+
+The notebooks read the key directly from Colab Secrets. Do not paste API keys into notebook cells.
 
 ---
 
